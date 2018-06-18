@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Main page</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            width: 290px;
+        }
+
+        table,
+        td,
+        th {
+            border: 1px solid black;
+        }
+
+        button,
+        input {
+            width: 100%;
+        }
+
+        .leftColumn,
+        .rightColumn {
+            display: inline-block;
+            width: 49%;
+            height: 400px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body ng-app="myApp">
+<div ng-controller="myCtrl">
+
+    <div class="leftColumn">
+
+        <!-- TABLE DATA -->
+        <table>
+            <thead>
+            <tr>
+                <td>Name</td>
+                <td>Price</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="car in cars track by $index">
+                <td ng-style="car.model.style" ng-click="view.setSelectedColumn(car.model, $index)">
+                    {{car.model.value}}
+                </td>
+                <td ng-style="car.price.style" ng-click="view.setSelectedColumn(car.price, $index)">
+                    {{car.price.value}}
+                </td>
+            </tr>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- .leftColumn -->
+    <div class="rightColumn">
+
+        <table class="propertyTable">
+            <thead>
+            <tr>
+                <td>Property name</td>
+                <td>Value</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(x, y) in view.selectedColumn.style track by x">
+                <td>{{x}}</td>
+                <td>{{y}}</td>
+                <td>
+                    <button ng-click="view.deleteStyle(x)">Delete</buttondeleteStyle>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" ng-model="view.newProperty.name">
+                </td>
+                <td>
+                    <input type="text" ng-model="view.newProperty.value">
+                </td>
+                <td>
+                    <button ng-click="view.addStyle()">Add/Edit</button>
+                </td>
+                <td>
+                    <button ng-click="view.clearNewProperty()">Clear</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- .rightColumn -->
+</div>
+
+<script>
+    var app = angular.module("myApp", []);
+    app.controller("myCtrl", function($scope) {
+
+        $scope.view = getViewFunctionality();
+
+        function getEmptyNewProperty() {
+            return {
+                name: "",
+                value: ""
+            }
+        }
+
+        function getViewFunctionality() {
+            return {
+                selectedColumn: {},
+                newProperty: getEmptyNewProperty(),
+
+                setSelectedColumn: function(selectedColumn, index) {
+                    this.selectedColumn = selectedColumn;
+                    this.selectedColumn.index = index;
+                },
+
+                addStyle: function() {
+                    if (this.newProperty.name.length == 0) return;
+
+                    this.selectedColumn.style[this.newProperty.name] = this.newProperty.value;
+                    this.newProperty = getEmptyNewProperty();
+                },
+
+                deleteStyle: function(nameProperty) {
+                    delete this.selectedColumn.style[nameProperty];
+                },
+
+                clearNewProperty: function() {
+                    this.newProperty = getEmptyNewProperty();
+                }
+
+            };
+        }
+
+        $scope.cars = [{
+            "model": {
+                "value": "BMW",
+                "style": {
+                    'color': 'green',
+                    'font-size': '25px',
+                    'background': 'black'
+                }
+            },
+            "price": {
+                "value": "4000",
+                "style": {
+                    'color': 'red',
+                    'font-size': '20px',
+                    'background': 'black'
+                }
+            }
+        }, {
+            "model": {
+                "value": "lada",
+                "style": {
+                    'font-size': '30px',
+                    'background': 'red'
+                }
+            },
+            "price": {
+                "value": "150",
+                "style": {
+                    'color': 'black',
+                    'background': 'yellow'
+                }
+            }
+        }];
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Main page</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            width: 200px;
+        }
+        
+        table,
+        td,
+        th {
+            border: 1px solid black;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body ng-app="myApp">
+
+    <div ng-controller="myCtrl">
+        <!-- TABLE DATA -->
+        <table>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Value</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="car in cars track by $index">
+                    <td ng-style="{{car.model.style}}" ng-click="setPropertyColumn(car.model.style)">
+                        {{car.model.value}}
+                    </td>
+                    <td ng-style="{{car.price.style}}" ng-click="setPropertyColumn(car.price.style)">
+                        {{car.price.value}}
+                    </td>
+                </tr>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <table>
+            <caption>Column properties</caption>
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Value</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(x, y) in choisedFieldStyles track by x">
+                    <td>{{x}}</td>
+                    <td>{{y}}</td>
+                </tr>
+            </tbody>
+
+        </table>
+        <br>
+        <br>
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" name="newPropertyName">
+                    </td>
+                    <td>
+                        <input type="text" name="newPropertyValue">
+                    </td>
+                    <td>
+                        <button ng-click="addStyle()">Add style</button>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <script>
+        var app = angular.module("myApp", []);
+        app.controller("myCtrl", function($scope) {
+
+            $scope.cars = [{
+                "model": {
+                    "value": "BMW",
+                    "style": {
+                        'color': 'green'
+                    }
+                },
+                "price": {
+                    "value": "4000",
+                    "style": {
+                        'color': 'red',
+                        'font-size': '24px'
+                    }
+                }
+            }, {
+                "model": {
+                    "value": "lada",
+                    "style": {
+                        'color': 'red',
+                        'background': 'yellow'
+                    }
+                },
+                "price": {
+                    "value": "150",
+                    "style": {
+                        'color': 'black'
+                    }
+                }
+            }]
+
+            function initDefault() {
+                $scope.newPropertyName = "";
+                $scope.newPropertyValue = "";
+            };
+
+            initDefault();
+
+            $scope.choisedFieldStyles = {};
+
+            $scope.addStyle = function() {
+                $scope.choisedFieldStyles[$scope.newPropertyName] = $scope.newPropertyValue;
+                initDefault();
+            }
+
+            $scope.setPropertyColumn = function(fieldStyles) {
+                $scope.choisedFieldStyles = fieldStyles;
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>
